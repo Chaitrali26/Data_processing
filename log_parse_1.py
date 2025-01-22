@@ -47,18 +47,16 @@ def warn_time():
     for line in lines:
         # EX: #<class 'str'> ==> line = "time="2020-03-18T14:40:04Z" level=warning msg="Clearing connections pool" file="corp/application2/task2.go:43" func=corp/application2/task2.connectionHandler kind=application"
         if "level=warning" in line:
-            time_str = line.split("time=")[1].split()[0]
-            time_str = time_str.replace('Z', '+0000')
-            date_time = time_str.split("T")
-            #print(date_time)
-            #parsed_date = datetime.strptime(time_str, "%Y-%m-%dT%H:%M:%S%z")
-            #date_to_datetime = datetime.strptime(time_str, "%Y-%m-%dT%H:%M:%SZ")
-            #print(date_to_datetime)
-            #date_format = '%Y-%m-%dT%H:%M:%S%Z'
-            #print(time_str)
-            #date_str = re.sub(r'(\+|\-)(\d{2})(\d{2})$', r'\1\2:\3', time_str)
-            #parsed_date = datetime.fromisoformat(time_str)
+            time_str = line.split("time=")[1].split()[0].replace('"','')
+            datetime_obj = datetime.strptime(time_str, "%Y-%m-%dT%H:%M:%SZ")
+            print(datetime_obj)
             
+
+            format_str = "%Y-%m-%d %H:%M:%S"
+            datetime_str = datetime_obj.strftime(format_str)
+            #print(datetime_str)
+            #print(type(datetime_str))
+
             '''
             %Y represents the four-digit year.
             %m represents the two-digit month.
@@ -69,9 +67,9 @@ def warn_time():
             T and Z are literal characters in the string.
             '''
             
-            output.append(time_str)
+            output.append(datetime_str)
     return output
-#print(warn_time())
+print(warn_time())
 
 # ------------------------------------------------------------------------------------------------------------
 # 4. Determine the number of unique messages (msg field) present in the log file.
@@ -141,7 +139,7 @@ def convert_dict_json():
     with open("logs_output.json", "w") as json_file:
         json.dump(parsed_logs, json_file, indent=4) #The indent=4 option makes it easy to read the output file.
     return parsed_logs
-print(convert_dict_json())
+#print(convert_dict_json())
 
 
 
