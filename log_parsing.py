@@ -61,16 +61,40 @@ def log_parse_4():
         if "log." in line:
             #date = line.split(":")[1]
             date = line.split(":")[1].strip().split(" ")[0]
-            print(date)
+            #print(date)
             if date not in output:
                 output[date] = 1
             else:
                 output[date]+=1
     return output
 
-print(log_parse_4())
+#print(log_parse_4())
 
 # ------------------------------------------------------------------------------------------------------------
+
+# extra logs between certain time duration
+from datetime import datetime
+def certain_time():
+    f = open("job_manager_log.txt", "r")
+    lines = f.readlines()
+    count = 0
+    for line in lines:
+        
+        # logger.log.10:2019-09-17 07:04:13.835+0000 INFO JobManager:402 - taskId=864612, taskStatus=TASK_FAILED
+        date = line.split("logger.log.10:")[1].split(" ")[0]
+        time = line.split(" ")[1] #07:16:42.835+0000
+        datetime_obj = datetime.strptime(date+time, '%Y-%m-%d%H:%M:%S.%f%z')
+        if datetime_obj.month == 10 and 10 <= datetime_obj.day  <= 15:
+            task_completed = line.split("taskStatus=")[-1]
+            #print(task_completed)
+            if task_completed == "TASK_COMPLETED\n":
+                count +=1
+        #print(datetime_obj)
+    return (f"Task completed between 2019-10-10 to 2019-10-15 are {count} time")
+print(certain_time())
+
+
+
 
 '''
 4. Write a Python function that calculates the duration of a task based on its taskId, considering that the task has two states: TASK_STARTING and TASK_COMPLETED.
